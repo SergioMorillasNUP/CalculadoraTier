@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Tiers</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f4f4f9;
+    }
+    .calculator {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      width: 400px;
+      text-align: center;
+    }
+    .calculator h1 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    .calculator label {
+      display: block;
+      margin: 10px 0 5px;
+      font-size: 0.9rem;
+      color: #555;
+      text-align: left;
+    }
+    .calculator input, .calculator select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+    .calculator button {
+      width: 100%;
+      padding: 10px;
+      background: #00abc7;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .calculator button:hover {
+      background: #0056b3;
+    }
+    .calculator .result {
+      margin-top: 20px;
+      font-size: 1rem;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <h1>Calculadora de Tiers</h1>
+    
+    <!-- El número de residencias se corresponde con el parámetro center_number -->
+    <label for="residencias">Número de residencias:</label>
+    <!-- Se usa input type="text" para permitir valores especiales (por ejemplo, "+10") -->
+    <input type="text" id="residencias" placeholder="Ej: 1, 2, 10">
+    
+    <!-- El tipo de pacientes debe coincidir exactamente con los valores de la función Python -->
+    <label for="tipoPacientes">Tipo de pacientes:</label>
+    <select id="tipoPacientes">
+      <option value="Adults">Adults</option>
+      <option value="Kids">Kids</option>
+      <option value="Adults+Kids">Adults+Kids</option>
+    </select>
+
+    <!-- Número de profesionales (se permiten valores como "TBD" o "+10") -->
+    <label for="profesionales">Número de profesionales:</label>
+    <input type="text" id="profesionales" placeholder='Ej: 1, 2, 3'>
+    
+    <button onclick="calcularTier()">Calcular Tier</button>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    function calcularTier() {
+      // Obtener valores de los inputs y eliminar espacios en blanco
+      const patientType = document.getElementById("tipoPacientes").value;
+      const professionalInput = document.getElementById("profesionales").value.trim();
+      const centerInput = document.getElementById("residencias").value.trim();
+
+      // Procesar el número de profesionales
+      let professionalNumber;
+      if (professionalInput === "" || professionalInput.toUpperCase() === "TBD") {
+        professionalNumber = 1;
+      } else if (professionalInput.includes("+10")) {
+        professionalNumber = 15;
+      } else {
+        professionalNumber = parseInt(professionalInput, 10);
+        if (isNaN(professionalNumber)) {
+          professionalNumber = 1;
+        }
+      }
+
+      // Procesar el número de residencias (centros)
+      let centerNumber;
+      if (centerInput === "") {
+        centerNumber = 1;
+      } else if (centerInput.includes("+10")) {
+        centerNumber = 15;
+      } else {
+        centerNumber = parseInt(centerInput, 10);
+        if (isNaN(centerNumber)) {
+          centerNumber = 1;
+        }
+      }
+
+      // Definir precios según el tipo de pacientes
+      let precioCentro = 0;
+      let precioProfesional = 336;
+      if (patientType === "Adults") {
+        precioCentro = 1070;
+      } else if (patientType === "Kids") {
+        precioCentro = 532;
+        precioProfesional = 150;
+      } else if (patientType === "Adults+Kids") {
+        precioCentro = 1248;
+      }
+
+      // Calcular el número de profesionales extra (más allá del número de residencias)
+      const profesionalesCalcular = Math.max(0, professionalNumber - centerNumber);
+
+      // Calcular el precio total
+      const precio = centerNumber * precioCentro + profesionalesCalcular * precioProfesional;
+
+      // Determinar el tier según el precio total
+      let tier;
+      if (precio >= 7000) {
+        tier = "1 con ID 1552";
+      } else if (precio >= 4000) {
+        tier = "2 con ID 1553";
+      } else if (precio >= 1500) {
+        tier = "3 con ID 1554";
+      } else if (precio >= 700) {
+        tier = "4 con ID 1555";
+      } else if (precio >= 400) {
+        tier = "5 con ID 1556";
+      } else {
+        tier = "No clasificado";
+      }
+
+      // Mostrar el resultado
+      document.getElementById("result").textContent =
+        `El precio total es: €${precio.toFixed(2)} y el tier es: ${tier}`;
+    }
+  </script>
+</body>
+</html>
