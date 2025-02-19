@@ -5,64 +5,85 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Calculadora de Tiers</title>
   <link rel="icon" type="image/webp" href="favicon.webp">
-
   <style>
-    body {
-      font-family: Arial, sans-serif;
+    /* Reset básico */
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      background-color: #f4f4f9;
     }
+
     .calculator {
       background: #fff;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      padding: 20px;
+      border: 2px solid #00abc7;
+      border-radius: 10px;
+      box-shadow: 3px 4px 12px rgb(75, 76, 71);
+      padding: 30px;
       width: 400px;
       text-align: center;
     }
+
     .calculator h1 {
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       margin-bottom: 20px;
-      color: #333;
+      color: #00abc7;
     }
+
     .calculator label {
       display: block;
-      margin: 10px 0 5px;
-      font-size: 0.9rem;
-      color: #555;
+      margin: 15px 0 5px;
+      font-size: 1rem;
+      color: #474c4c;
       text-align: left;
     }
-    .calculator input, .calculator select {
+
+    .calculator input, 
+    .calculator select {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       margin-bottom: 20px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
+      border: 1px solid #474c4c;
+      border-radius: 5px;
       font-size: 1rem;
+      outline: none;
+      transition: border-color 0.3s;
     }
+
+    .calculator input:focus, 
+    .calculator select:focus {
+      border-color: #ff9c00;
+    }
+
     .calculator button {
       width: 100%;
-      padding: 10px;
-      background: #00abc7;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
+      padding: 12px;
+      background: #fff;
+      border: 2px solid #474c4c;
+      border-radius: 5px;
       font-size: 1rem;
+      color: #474c4c;
       cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
     }
+
     .calculator button:hover {
-      background: #0056b3;
+      background-color: #00abc7;
+      color: #fff;
     }
+
     .calculator .result {
       margin-top: 20px;
-      font-size: 1rem;
-      color: #333;
+      font-size: 1.1rem;
+      color: #474c4c;
     }
   </style>
 </head>
@@ -70,12 +91,9 @@
   <div class="calculator">
     <h1>Calculadora de Tiers</h1>
     
-    <!-- El número de residencias se corresponde con el parámetro center_number -->
     <label for="residencias">Número de residencias:</label>
-    <!-- Se usa input type="text" para permitir valores especiales (por ejemplo, "+10") -->
     <input type="text" id="residencias" placeholder="Ej: 1, 2, 10">
     
-    <!-- El tipo de pacientes debe coincidir exactamente con los valores de la función Python -->
     <label for="tipoPacientes">Tipo de pacientes:</label>
     <select id="tipoPacientes">
       <option value="Adults">Adults</option>
@@ -83,9 +101,8 @@
       <option value="Adults+Kids">Adults+Kids</option>
     </select>
 
-    <!-- Número de profesionales (se permiten valores como "TBD" o "+10") -->
     <label for="profesionales">Número de profesionales:</label>
-    <input type="text" id="profesionales" placeholder='Ej: 1, 2, 3'>
+    <input type="text" id="profesionales" placeholder="Ej: 1, 2, 3">
     
     <button onclick="calcularTier()">Calcular Tier</button>
     <div class="result" id="result"></div>
@@ -110,6 +127,8 @@
           professionalNumber = 1;
         }
       }
+      // Evitar datos negativos
+      if (professionalNumber < 0) professionalNumber = 1;
 
       // Procesar el número de residencias (centros)
       let centerNumber;
@@ -123,6 +142,8 @@
           centerNumber = 1;
         }
       }
+      // Evitar datos negativos
+      if (centerNumber < 0) centerNumber = 1;
 
       // Definir precios según el tipo de pacientes
       let precioCentro = 0;
